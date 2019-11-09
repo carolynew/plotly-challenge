@@ -1,14 +1,11 @@
 function buildMetadata(sample) {
 
   // @TODO: Complete the following function that builds the metadata panel
-
   // Use `d3.json` to fetch the metadata for a sample
- 
-    // Use d3 to select the panel with id of `#sample-metadata`
     d3.json(`/metadata/${sample}`).then(function(response) {
       console.log(response)
 
-  
+    // Use d3 to select the panel with id of `#sample-metadata`
     // Use `.html("") to clear any existing metadata
     let table = d3.select("#sample-metadata").html("")
 
@@ -18,7 +15,6 @@ function buildMetadata(sample) {
       let row = cell.append("tr");
       row.text('${key}: ${value}');
     });
-
 
 });
 
@@ -47,19 +43,31 @@ function buildCharts(sample) {
       width: 1200
     };
 
-    let bubbleData = [bubbleChart]
+    let bubbleData = [bubbleChart];
       Plotly.newPlot("bubble", bubbleData, bubbleLayout);
-
-
-
-
-  });
-
 
     // @TODO: Build a Pie Chart
     // HINT: You will need to use slice() to grab the top 10 sample_values,
     // otu_ids, and labels (10 each).
-}
+    let pieChart = {
+      values: plotData.sample_values.slice(0,10),
+      labels: plotData.otu_ids.slice(0,10),
+      hoverinfo: plotData.otu_labels.slice(0,10),
+      text: plotData.otu_labels.slice(0,10),
+      type: "pie"
+    };
+  
+    let pieLayout = {
+      hieght: 500,
+      width: 600
+    };
+
+    let pieData = [pieChart];
+      Plotly.newPlot("pie", pieData, pieLayout);
+
+  });
+
+};
 
 function init() {
   // Grab a reference to the dropdown select element
@@ -85,7 +93,7 @@ function optionChanged(newSample) {
   // Fetch new data each time a new sample is selected
   buildCharts(newSample);
   buildMetadata(newSample);
-}
+};
 
 // Initialize the dashboard
 init();
