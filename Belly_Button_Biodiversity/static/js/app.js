@@ -3,28 +3,58 @@ function buildMetadata(sample) {
   // @TODO: Complete the following function that builds the metadata panel
 
   // Use `d3.json` to fetch the metadata for a sample
-  d3.json(`/metadata/${sample}`).then(data => {
-
  
     // Use d3 to select the panel with id of `#sample-metadata`
-    d3.select("sample-metadata")
-    // Use `.html("") to clear any existing metadata
-    .html("")
-    // Use `Object.entries` to add each key and value pair to the panel
-    Object.entries(data).forEach(key, value {
-      .append()
-    });
-    // Hint: Inside the loop, you will need to use d3 to append new
-    // tags for each key-value in the metadata.
+    d3.json(`/metadata/${sample}`).then(function(response) {
+      console.log(response)
 
-  })
-};
+  
+    // Use `.html("") to clear any existing metadata
+    let table = d3.select("#sample-metadata").html("")
+
+    // Use `Object.entries` to add each key and value pair to the panel
+    let cell = table.append("td");
+    Object.entries(response).forEach(([key, value]) => {
+      let row = cell.append("tr");
+      row.text('${key}: ${value}');
+    });
+
+
+});
+
+// const plotData = [];
 
 function buildCharts(sample) {
 
   // @TODO: Use `d3.json` to fetch the sample data for the plots
-  d3.json()
+  let plotData = `/samples/${sample}`
+  console.log("plotData=", plotData);
+  d3.json(plotData).then(function(plotData) {
     // @TODO: Build a Bubble Chart using the sample data
+    let bubbleChart = {
+      x: plotData.otu_ids,
+      y: plotData.sample_values,
+      mode: `markers`,
+      marker: {
+        color: plotData.otu_ids,
+        size: plotData.sample_values
+      },
+      text: plotData.otu_labels
+    };
+
+    let bubbleLayout = {
+      height: 600,
+      width: 1200
+    };
+
+    let bubbleData = [bubbleChart]
+      Plotly.newPlot("bubble", bubbleData, bubbleLayout);
+
+
+
+
+  });
+
 
     // @TODO: Build a Pie Chart
     // HINT: You will need to use slice() to grab the top 10 sample_values,
