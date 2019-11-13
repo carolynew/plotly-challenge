@@ -18,6 +18,7 @@ function buildMetadata(sample) {
 
 });
 
+}
 // const plotData = [];
 
 function buildCharts(sample) {
